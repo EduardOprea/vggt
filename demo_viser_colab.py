@@ -132,17 +132,22 @@ def viser_wrapper(
     # Compute the threshold value as the given percentile
     init_threshold_val = np.percentile(conf_flat, init_conf_threshold)
     init_conf_mask = (conf_flat >= init_threshold_val) & (conf_flat > 0.1)
+
+    turntable = server.scene.add_frame(
+        "turntable_root",
+        axes_length=0.0, axes_radius=0.0, origin_radius=0.0,   # invisible
+)
+    
     point_cloud = server.scene.add_point_cloud(
         name="viser_pcd",
         points=points_centered[init_conf_mask],
         colors=colors_flat[init_conf_mask],
         point_size=0.001,
         point_shape="circle",
+        parent=turntable
     )
 
-    turntable = server.scene.add_frame("turntable_root")
-    turntable.visible = False
-    point_cloud.parent = turntable  
+    
 
     # We will store references to frames & frustums so we can toggle visibility
     frames: List[viser.FrameHandle] = []
