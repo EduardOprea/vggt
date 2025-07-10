@@ -141,6 +141,7 @@ def viser_wrapper(
     )
 
     turntable = server.scene.add_frame("turntable_root")
+    turntable.visible = False
     point_cloud.parent = turntable  
 
     # We will store references to frames & frustums so we can toggle visibility
