@@ -140,6 +140,9 @@ def viser_wrapper(
         point_shape="circle",
     )
 
+    turntable = server.scene.add_frame("turntable_root")
+    point_cloud.parent = turntable  
+
     # We will store references to frames & frustums so we can toggle visibility
     frames: List[viser.FrameHandle] = []
     frustums: List[viser.CameraFrustumHandle] = []
@@ -167,7 +170,8 @@ def viser_wrapper(
                 base_q = frame.wxyz.copy()           # quaternion (w, x, y, z)
                 base_p = frame.position.copy()       # eye position
                 # Choose a pleasant orbit pivot (keep existing)
-                pivot  = frame.look_at.copy()
+                ## TODO what is this value ?
+                ##pivot  = frame.look_at.copy()
 
                 for client in server.get_clients().values():
                     client.camera.wxyz = frame.wxyz
