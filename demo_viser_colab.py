@@ -255,6 +255,9 @@ def viser_wrapper(
         ##so3 = viser_tf.SO3(camera.wxyz)          # wrap quaternion
         ##yaw, pitch, roll = so3.yaw_pitch_roll()   # radians, world-Z-YX order
         print(f"DEBUG {label} wxyz  :", camera.wxyz)
+        pos = camera.position          # NumPy array, shape (3,)
+        print("DEBUG position xyz =", pos)
+        print("DEBUG look at xyz =", camera.look_at)
         # print(f"{label} Euler :", np.degrees([yaw, pitch, roll]).round(2),
         #     "(yaw°, pitch°, roll°)")
         
