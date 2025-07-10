@@ -167,7 +167,7 @@ def viser_wrapper(
                 base_q = frame.wxyz.copy()           # quaternion (w, x, y, z)
                 base_p = frame.position.copy()       # eye position
                 # Choose a pleasant orbit pivot (keep existing)
-                pivot  = frame.position.copy() + np.array([0, 0, 1.0])
+                pivot  = frame.position.copy()
 
                 for client in server.get_clients().values():
                     client.camera.wxyz = frame.wxyz
@@ -198,7 +198,7 @@ def viser_wrapper(
                         iio.imwrite(fname, img)
                         print(f"[SAVE] {fname}")
 
-                    print("[DONE] 4 yaw views captured.")
+                    print(f"[DONE] {len(YAW_OFFSETS)} yaw views captured.")
 
                 # Use the first (or only) client for the screenshots
                 first_client = next(iter(server.get_clients().values()))
