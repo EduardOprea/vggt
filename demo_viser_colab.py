@@ -138,7 +138,7 @@ def viser_wrapper(
         axes_length=0.0, axes_radius=0.0, origin_radius=0.0,   # invisible
 )
     
-    point_cloud = turntable.add_point_cloud(
+    point_cloud = server.scene.add_point_cloud(
         name="/turntable_root/viser_pcd",
         points=points_centered[init_conf_mask],
         colors=colors_flat[init_conf_mask],
