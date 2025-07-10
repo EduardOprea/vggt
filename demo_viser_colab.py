@@ -178,7 +178,7 @@ def viser_wrapper(
                     YAW_OFFSETS = [-30, -15, +15, +30]       # degrees
                     OUT_SIZE    = (512, 512) 
                     for yaw in YAW_OFFSETS:
-                        q_delta  = viser_tf.SO3.from_z_radians(np.deg2rad(yaw))
+                        q_delta  = viser_tf.SO3.from_y_radians(np.deg2rad(yaw))
                         q_target = (q_delta @ viser_tf.SO3(base_q)).wxyz   # world-space yaw
 
                         with client.atomic():
@@ -191,7 +191,7 @@ def viser_wrapper(
                         time.sleep(0.05)          # front-end redraw
 
                         img = client.get_render(*OUT_SIZE)
-                        fname = f"/content/yaw_{yaw:+d}.png"
+                        fname = f"/content/yaw_2_{yaw:+d}.png"
 
                         iio.imwrite(fname, img)
                         print(f"[SAVE] {fname}")
@@ -289,14 +289,10 @@ def viser_wrapper(
         """
         Dump quaternion + Euler angles (degrees) so you can copy-paste them back.
         """
-        ##so3 = viser_tf.SO3(camera.wxyz)          # wrap quaternion
-        ##yaw, pitch, roll = so3.yaw_pitch_roll()   # radians, world-Z-YX order
         print(f"DEBUG {label} wxyz  :", camera.wxyz)
-        pos = camera.position          # NumPy array, shape (3,)
+        pos = camera.position
         print("DEBUG position xyz =", pos)
         print("DEBUG look at xyz =", camera.look_at)
-        # print(f"{label} Euler :", np.degrees([yaw, pitch, roll]).round(2),
-        #     "(yaw°, pitch°, roll°)")
         
 
     # Add the camera frames to the scene
