@@ -179,7 +179,7 @@ def viser_wrapper(
                     OUT_SIZE    = (512, 512) 
                     for yaw in YAW_OFFSETS:
                         q_delta  = viser_tf.SO3.from_z_radians(np.deg2rad(yaw))
-                        q_target = (q_delta * viser_tf.SO3(base_q)).wxyz   # world-space yaw
+                        q_target = (q_delta @ viser_tf.SO3(base_q)).wxyz   # world-space yaw
 
                         with client.atomic():
                             client.camera.wxyz     = q_target
