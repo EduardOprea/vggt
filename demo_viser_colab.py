@@ -17,6 +17,7 @@ from tqdm.auto import tqdm
 import viser
 import viser.transforms as viser_tf
 import cv2
+import imageio.v3 as iio
 
 
 
@@ -162,10 +163,46 @@ def viser_wrapper(
         def attach_callback(frustum: viser.CameraFrustumHandle, frame: viser.FrameHandle) -> None:
             @frustum.on_click
             def _(_) -> None:
-                print("Camera changed:", frame.wxyz)
+                print(f"[INFO] Neutral pose selected via click: {frustum.name}")
+                base_q = frame.wxyz.copy()           # quaternion (w, x, y, z)
+                base_p = frame.position.copy()       # eye position
+                # Choose a pleasant orbit pivot (keep existing)
+                pivot  = frame.position.copy() + np.array([0, 0, 1.0])
+
                 for client in server.get_clients().values():
                     client.camera.wxyz = frame.wxyz
                     client.camera.position = frame.position
+
+                def render_sweep(client: viser.ClientHandle) -> None:
+                    print("start render sweep")
+                    YAW_OFFSETS = [-30, -15, +15, +30]       # degrees
+                    OUT_SIZE    = (512, 512) 
+                    for yaw in YAW_OFFSETS:
+                        q_delta  = viser_tf.SO3.from_z_radians(np.deg2rad(yaw))
+                        q_target = (q_delta * viser_tf.SO3(base_q)).wxyz   # world-space yaw
+
+                        with client.atomic():
+                            client.camera.wxyz     = q_target
+                            client.camera.position = base_p
+                            client.camera.look_at  = pivot
+
+                        print("after set correct camera pose on client")
+                        client.flush()            # push pose immediately
+                        time.sleep(0.05)          # front-end redraw
+
+                        img = client.get_render(*OUT_SIZE)
+                        fname = f"/content/yaw_{yaw:+d}.png"
+
+                        iio.imwrite(fname, img)
+                        print(f"[SAVE] {fname}")
+
+                    print("[DONE] 4 yaw views captured.")
+
+                # Use the first (or only) client for the screenshots
+                first_client = next(iter(server.get_clients().values()))
+                threading.Thread(target=render_sweep,
+                                args=(first_client,),
+                                daemon=True).start()
 
         img_ids = range(S)
         for img_id in tqdm(img_ids):
