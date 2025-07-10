@@ -19,6 +19,7 @@ import viser.transforms as viser_tf
 import cv2
 
 
+
 try:
     import onnxruntime
 except ImportError:
@@ -236,6 +237,27 @@ def viser_wrapper(
             f.visible = gui_show_frames.value
         for fr in frustums:
             fr.visible = gui_show_frames.value
+
+    
+    @server.on_client_connect
+    def _(client: viser.ClientHandle) -> None:
+        # fire once immediately
+        report_pose(client.camera, "[connect]")
+        # fire every time the user moves the mouse
+        @client.camera.on_update
+        def _(_) -> None:
+            report_pose(client.camera, "[drag]")
+
+    def report_pose(camera: viser.CameraHandle, label: str = "") -> None:
+        """
+        Dump quaternion + Euler angles (degrees) so you can copy-paste them back.
+        """
+        so3 = viser_tf.SO3(camera.wxyz)          # wrap quaternion
+        yaw, pitch, roll = so3.yaw_pitch_roll()   # radians, world-Z-YX order
+        print(f"{label} wxyz  :", camera.wxyz)
+        print(f"{label} Euler :", np.degrees([yaw, pitch, roll]).round(2),
+            "(yaw°, pitch°, roll°)")
+        
 
     # Add the camera frames to the scene
     visualize_frames(cam_to_world, images)
