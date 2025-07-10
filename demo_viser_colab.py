@@ -178,38 +178,31 @@ def viser_wrapper(
                     client.camera.wxyz = frame.wxyz
                     client.camera.position = frame.position
 
-                def render_sweep(client: viser.ClientHandle) -> None:
+                def render_sweep():
                     print("start render sweep")
                     YAW_OFFSETS = [-60,-45, -30, -15, +15, +30, +45, +60]       # degrees
                     OUT_SIZE    = (512, 512) 
                     for yaw in YAW_OFFSETS:
-                        q_delta  = viser_tf.SO3.from_y_radians(np.deg2rad(yaw))
-                        print("Q_delta -> ", q_delta)
-                        q_target = (q_delta @ viser_tf.SO3(base_q)).wxyz   # world-space yaw
-                        print("q_target -> ", q_target)
+                        # --- 1 · rotate the parent frame (this spins the cloud) ----
+                        turntable.wxyz = viser_tf.SO3.from_y_radians(
+                            np.deg2rad(yaw)             # <- degrees → radians
+                        ).wxyz                           # <- assign quaternion
 
-                        with client.atomic():
-                            client.camera.wxyz     = q_target
-                            client.camera.position = base_p
-                            client.camera.look_at  = pivot
-
-                        print("after set correct camera pose on client")
-                        client.flush()            # push pose immediately
-                        time.sleep(0.05)          # front-end redraw
-
+                        # --- 2 · grab a screenshot from the *current* camera pose ---
                         img = client.get_render(*OUT_SIZE)
-                        fname = f"/content/output/yaw_2_{yaw:+d}.png"
-
+                        fname = f"/content/output/turntable_yaw_{yaw:+03d}.png"
                         iio.imwrite(fname, img)
-                        print(f"[SAVE] {fname}")
+                        print(" saved", fname)
+
+                    print("[DONE] turn-table sweep complete.")
 
                     print(f"[DONE] {len(YAW_OFFSETS)} yaw views captured.")
 
                 # Use the first (or only) client for the screenshots
                 first_client = next(iter(server.get_clients().values()))
-                # threading.Thread(target=render_sweep,
-                #                 args=(first_client,),
-                #                 daemon=True).start()
+                threading.Thread(target=render_sweep,
+                                args=(first_client,),
+                                daemon=True).start()
 
         img_ids = range(S)
         for img_id in tqdm(img_ids):
