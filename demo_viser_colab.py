@@ -188,6 +188,8 @@ def viser_wrapper(
                             np.deg2rad(yaw)             # <- degrees → radians
                         ).wxyz                           # <- assign quaternion
 
+                        client.flush()
+                        time.sleep(0.3)
                         # --- 2 · grab a screenshot from the *current* camera pose ---
                         img = client.get_render(*OUT_SIZE)
                         fname = f"/content/output/turntable_yaw_{yaw:+03d}.png"
