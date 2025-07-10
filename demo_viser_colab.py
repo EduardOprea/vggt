@@ -206,9 +206,9 @@ def viser_wrapper(
 
                 # Use the first (or only) client for the screenshots
                 first_client = next(iter(server.get_clients().values()))
-                threading.Thread(target=render_sweep,
-                                args=(first_client,),
-                                daemon=True).start()
+                # threading.Thread(target=render_sweep,
+                #                 args=(first_client,),
+                #                 daemon=True).start()
 
         img_ids = range(S)
         for img_id in tqdm(img_ids):
