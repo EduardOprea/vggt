@@ -193,7 +193,7 @@ def viser_wrapper(
                         time.sleep(0.05)          # front-end redraw
 
                         img = client.get_render(*OUT_SIZE)
-                        fname = f"/content/yaw_2_{yaw:+d}.png"
+                        fname = f"/content/output/yaw_2_{yaw:+d}.png"
 
                         iio.imwrite(fname, img)
                         print(f"[SAVE] {fname}")
