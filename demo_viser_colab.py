@@ -289,10 +289,10 @@ def viser_wrapper(
         """
         Dump quaternion + Euler angles (degrees) so you can copy-paste them back.
         """
-        print(f"DEBUG {label} wxyz  :", camera.wxyz)
-        pos = camera.position
-        print("DEBUG position xyz =", pos)
-        print("DEBUG look at xyz =", camera.look_at)
+        # print(f"DEBUG {label} wxyz  :", camera.wxyz)
+        # pos = camera.position
+        # print("DEBUG position xyz =", pos)
+        # print("DEBUG look at xyz =", camera.look_at)
         
 
     # Add the camera frames to the scene
