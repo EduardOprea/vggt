@@ -142,6 +142,7 @@ def viser_wrapper(
     frames: List[viser.FrameHandle] = []
     frustums: List[viser.CameraFrustumHandle] = []
 
+
     def visualize_frames(extrinsics: np.ndarray, images_: np.ndarray) -> None:
         """
         Add camera frames and frustums to the scene.
@@ -160,6 +161,7 @@ def viser_wrapper(
         def attach_callback(frustum: viser.CameraFrustumHandle, frame: viser.FrameHandle) -> None:
             @frustum.on_click
             def _(_) -> None:
+                print("Camera changed:", frame.wxyz)
                 for client in server.get_clients().values():
                     client.camera.wxyz = frame.wxyz
                     client.camera.position = frame.position
