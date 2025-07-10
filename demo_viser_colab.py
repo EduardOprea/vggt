@@ -178,7 +178,7 @@ def viser_wrapper(
                     client.camera.wxyz = frame.wxyz
                     client.camera.position = frame.position
 
-                def render_sweep():
+                def render_sweep(client):
                     print("start render sweep")
                     YAW_OFFSETS = [-60,-45, -30, -15, +15, +30, +45, +60]       # degrees
                     OUT_SIZE    = (512, 512) 
