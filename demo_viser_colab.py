@@ -175,11 +175,13 @@ def viser_wrapper(
 
                 def render_sweep(client: viser.ClientHandle) -> None:
                     print("start render sweep")
-                    YAW_OFFSETS = [-30, -15, +15, +30]       # degrees
+                    YAW_OFFSETS = [-60,-45, -30, -15, +15, +30, +45, +60]       # degrees
                     OUT_SIZE    = (512, 512) 
                     for yaw in YAW_OFFSETS:
                         q_delta  = viser_tf.SO3.from_y_radians(np.deg2rad(yaw))
+                        print("Q_delta -> ", q_delta)
                         q_target = (q_delta @ viser_tf.SO3(base_q)).wxyz   # world-space yaw
+                        print("q_target -> ", q_target)
 
                         with client.atomic():
                             client.camera.wxyz     = q_target
