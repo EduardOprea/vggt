@@ -167,7 +167,7 @@ def viser_wrapper(
                 base_q = frame.wxyz.copy()           # quaternion (w, x, y, z)
                 base_p = frame.position.copy()       # eye position
                 # Choose a pleasant orbit pivot (keep existing)
-                pivot  = frame.position.copy()
+                pivot  = frame.look_at.copy()
 
                 for client in server.get_clients().values():
                     client.camera.wxyz = frame.wxyz
