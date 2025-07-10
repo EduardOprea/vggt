@@ -182,6 +182,7 @@ def viser_wrapper(
                     client.camera.wxyz = frame.wxyz
                     client.camera.position = frame.position
 
+                frustum.visible     = False
                 def render_sweep(client):
                     print("start render sweep")
                     YAW_OFFSETS = [-60,-45, -30, -15, +15, +30, +45, +60]       # degrees
@@ -201,7 +202,7 @@ def viser_wrapper(
                         print(" saved", fname)
 
                     print("[DONE] turn-table sweep complete.")
-
+                    frustum.visible = True
                     print(f"[DONE] {len(YAW_OFFSETS)} yaw views captured.")
 
                 # Use the first (or only) client for the screenshots
