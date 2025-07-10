@@ -252,11 +252,11 @@ def viser_wrapper(
         """
         Dump quaternion + Euler angles (degrees) so you can copy-paste them back.
         """
-        so3 = viser_tf.SO3(camera.wxyz)          # wrap quaternion
-        yaw, pitch, roll = so3.yaw_pitch_roll()   # radians, world-Z-YX order
-        print(f"{label} wxyz  :", camera.wxyz)
-        print(f"{label} Euler :", np.degrees([yaw, pitch, roll]).round(2),
-            "(yaw°, pitch°, roll°)")
+        ##so3 = viser_tf.SO3(camera.wxyz)          # wrap quaternion
+        ##yaw, pitch, roll = so3.yaw_pitch_roll()   # radians, world-Z-YX order
+        print(f"DEBUG {label} wxyz  :", camera.wxyz)
+        # print(f"{label} Euler :", np.degrees([yaw, pitch, roll]).round(2),
+        #     "(yaw°, pitch°, roll°)")
         
 
     # Add the camera frames to the scene
