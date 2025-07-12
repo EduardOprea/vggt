@@ -41,6 +41,7 @@ def viser_wrapper(
     background_mode: bool = False,
     mask_sky: bool = False,
     image_folder: str = None,
+    output_folder: str = None
 ):
     """
     Visualize predicted 3D points and camera poses with viser.
@@ -185,6 +186,10 @@ def viser_wrapper(
                 frustum.visible     = False
                 def render_sweep(client):
                     print("start render sweep")
+                    if output_folder is None:
+                        print("Output folder for rendering images is None")
+                        return
+                    
                     YAW_OFFSETS = [-60,-45, -30, -15, +15, +30, +45, +60]       # degrees
                     OUT_SIZE    = (512, 512) 
                     for yaw in YAW_OFFSETS:
@@ -197,7 +202,8 @@ def viser_wrapper(
                         time.sleep(0.3)
                         # --- 2 · grab a screenshot from the *current* camera pose ---
                         img = client.get_render(*OUT_SIZE)
-                        fname = f"/content/output/turntable_yaw_{yaw:+03d}.png"
+                        
+                        fname = f"{output_folder}/turntable_yaw_{yaw:+03d}.png"
                         iio.imwrite(fname, img)
                         print(" saved", fname)
 
@@ -379,6 +385,9 @@ parser = argparse.ArgumentParser(description="VGGT demo with viser for 3D visual
 parser.add_argument(
     "--image_folder", type=str, default="examples/kitchen/images/", help="Path to folder containing images"
 )
+parser.add_argument(
+    "--output_folder", type=str, default=None, help="Path to output rendered images from different poses"
+)
 parser.add_argument("--use_point_map", action="store_true", help="Use point map instead of depth-based points")
 parser.add_argument("--background_mode", action="store_true", help="Run the viser server in background mode")
 parser.add_argument("--port", type=int, default=8080, help="Port number for the viser server")
@@ -464,6 +473,7 @@ def main():
         background_mode=args.background_mode,
         mask_sky=args.mask_sky,
         image_folder=args.image_folder,
+        output_folder=args.output_folder
     )
     print("Visualization complete")
 
