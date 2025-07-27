@@ -190,7 +190,8 @@ def viser_wrapper(
                         print("Output folder for rendering images is None")
                         return
                     
-                    YAW_OFFSETS = [-60,-45, -30, -15, +15, +30, +45, +60]       # degrees
+                    YAW_OFFSETS = list(range(0,346,15))
+                    #YAW_OFFSETS = [-60,-45, -30, -15, +15, +30, +45, +60]       # degrees
                     OUT_SIZE    = (512, 512) 
                     for yaw in YAW_OFFSETS:
                         # --- 1 · rotate the parent frame (this spins the cloud) ----
